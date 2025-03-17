@@ -5,6 +5,7 @@ import crypto from "crypto"
 import { OAuthProvider } from "@/drizzle/schema"
 import { createDiscordOAuthClient } from "./discord"
 import { createGithubOAuthClient } from "./github"
+import { createGoogleOAuthClient } from "./google"
 
 const STATE_COOKIE_KEY = "oAuthState"
 const CODE_VERIFIER_COOKIE_KEY = "oAuthCodeVerifier"
@@ -97,6 +98,7 @@ export class OAuthClient<T> {
     })
       .then(res => res.json())
       .then(rawData => {
+        console.log(rawData)
         const { data, success, error } = this.userInfo.schema.safeParse(rawData)
         if (!success) throw new InvalidUserError(error)
 
@@ -141,6 +143,8 @@ export function getOAuthClient(provider: OAuthProvider) {
       return createDiscordOAuthClient()
     case "github":
       return createGithubOAuthClient()
+    case "google":
+      return createGoogleOAuthClient()
     default:
       throw new Error(`Invalid provider: ${provider satisfies never}`)
   }
