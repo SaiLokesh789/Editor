@@ -49,6 +49,12 @@ export function SignUpForm() {
           >
             GitHub
           </Button>
+          <Button
+            type="button"
+            onClick={async () => await oAuthSignIn("google")}
+          >
+            Google
+          </Button>
         </div>
         <FormField
           control={form.control}
