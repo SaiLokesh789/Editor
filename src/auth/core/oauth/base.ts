@@ -82,7 +82,7 @@ export class OAuthClient<T> {
     return url.toString()
   }
 
-  async fetchUser(code: string, state: string, cookies: Pick<Cookies, "get">) {
+  async fetchUser(code: string, state: string, cookies: Pick<Cookies, "get">,provider: OAuthProvider) {
     const isValidState = await validateState(state, cookies)
     if (!isValidState) throw new InvalidStateError()
 
@@ -97,13 +97,29 @@ export class OAuthClient<T> {
       },
     })
       .then(res => res.json())
-      .then(rawData => {
-        console.log(rawData)
+      .then(async rawData => {
+
+        //only for github ↓ 
+        if (provider === "github" && rawData.email == null) {
+          const emailList = await fetch("https://api.github.com/user/emails", {
+            headers: {
+              Authorization: `${tokenType} ${accessToken}`,
+              Accept: "application/vnd.github+json",
+            },
+          }).then(res => res.json())
+      
+          const email = emailList.find((e: any) => e.primary && e.verified)?.email
+          if (!email) throw new DiscordError("No verified GitHub email found")
+          rawData.email = email
+        }
+        //only for github ↑
+
         const { data, success, error } = this.userInfo.schema.safeParse(rawData)
         if (!success) throw new InvalidUserError(error)
 
         return data
       })
+      
 
     return this.userInfo.parser(user)
   }
@@ -134,6 +150,12 @@ export class OAuthClient<T> {
           tokenType: data.token_type,
         }
       })
+  }
+}
+
+class DiscordError extends Error {
+  constructor(message: string) {
+    super("message")
   }
 }
 
