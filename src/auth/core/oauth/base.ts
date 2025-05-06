@@ -155,7 +155,7 @@ export class OAuthClient<T> {
 
 class DiscordError extends Error {
   constructor(message: string) {
-    super("message")
+    super(message)
   }
 }
 

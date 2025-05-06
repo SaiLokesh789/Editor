@@ -3,15 +3,22 @@
 import dynamic from "next/dynamic";
 
 // Disable SSR for the Monaco Editor
-const Editor = dynamic(() => import("@/features/editor/components/editor"), {
-  ssr: false,
-});
+const CodeEditor = dynamic(
+  () => import("@/features/editor/components/editor"),
+  {
+    ssr: false,
+  }
+);
 
-export default function EditorPage({user}: {user: any}) {
+export default function EditorPage({
+  user,probId
+}: {
+  user: { id: string; role: "user" | "admin" } | null;
+  probId: string;
+}) {
   return (
-    <div style={{ height: "90vh" }} className="pt-20">
-      <div className="text-center text-2xl font-bold mb-4">Monaco Editor</div>
-      <Editor user={user} />
+    <div className="flex flex-col w-full h-full">
+      <CodeEditor user={user} probId={probId} />
     </div>
   );
 }
