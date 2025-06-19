@@ -15,6 +15,8 @@ export const useEditorLogic = (probId: string, userId: string) => {
   const [userCode, setUserCode] = useState(" ");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [outputTime, setOutputTime] = useState("");
+  const [outputMemory, setOutputMemory] = useState("");
   const [error, setError] = useState("");
   const [stderr, setStderr] = useState("");
   const [isRunning, setIsRunning] = useState(false);
@@ -66,5 +68,17 @@ export const useEditorLogic = (probId: string, userId: string) => {
     input,
     setInput,
     handleEditorChange,
+    output,
+    setOutput,
+    outputTime,
+    setOutputTime,
+    outputMemory,
+    setOutputMemory,
+    error,
+    setError,
+    stderr,
+    setStderr,
+    isRunning,
+    setIsRunning,
   };
 };

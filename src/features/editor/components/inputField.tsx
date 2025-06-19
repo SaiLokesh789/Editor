@@ -8,6 +8,7 @@ export default function InputField({
   setInput: (input: string) => void;
   probId: string;
 }) {
+  // TODO: fetch the input from the server
   const input = "2\nhi\nhello";
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
