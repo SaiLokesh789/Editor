@@ -4,7 +4,7 @@ import {
   updateUserSessionExpiration,
 } from "./auth/core/session"
 
-const privateRoutes = ["/private"]
+const privateRoutes = ["/private", "/administration"]
 const adminRoutes = ["/admin"]
 
 export async function middleware(request: NextRequest) {
@@ -21,7 +21,8 @@ export async function middleware(request: NextRequest) {
 }
 
 async function middlewareAuth(request: NextRequest) {
-  if (privateRoutes.includes(request.nextUrl.pathname)) {
+  const pathname = request.nextUrl.pathname
+  if (privateRoutes.some(route => pathname === route || pathname.startsWith(route + "/"))) {
     const user = await getUserFromSession(request.cookies)
     if (user == null) {
       return NextResponse.redirect(new URL("/sign-in", request.url))

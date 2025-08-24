@@ -22,7 +22,8 @@ export const cleanUpExpiredQuestions = () => {
     const lastCleanupTimeMillis = new Date(lastCleanupTime).getTime();
 
     if (!isNaN(lastCleanupTimeMillis)) {
-      shouldCleanup = currentTime - lastCleanupTimeMillis > cleanupInterval;
+      if (currentTime - lastCleanupTimeMillis > cleanupInterval)
+        shouldCleanup = true;
     }
   } else {
     shouldCleanup = true;

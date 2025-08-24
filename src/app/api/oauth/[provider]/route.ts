@@ -63,6 +63,7 @@ function connectUserToAccount(
         .values({
           email: email,
           name: name,
+          username: email.split("@")[0],
         })
         .returning({ id: UserTable.id, role: UserTable.role })
       user = newUser

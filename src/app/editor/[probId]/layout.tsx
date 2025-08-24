@@ -18,8 +18,8 @@ export default async function EditorLayout({
   const { probId } = await params;
   const user = await getCurrentUser();
   return (
-    <div className="flex flex-col w-full h-full">
-      <EditorNavBar />
+    <div className="flex flex-col w-full h-full bg-[#252525] text-white">
+      {/* <EditorNavBar /> */}
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center overflow-auto">
         <ResizablePanelGroup direction="horizontal" className=" h-full">
           <ResizablePanel defaultSize={50} className="min-w-[450px]">

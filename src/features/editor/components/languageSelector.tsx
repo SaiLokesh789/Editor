@@ -8,7 +8,7 @@ export default function LanguageSelector({
   setLanguage: (lang: string) => void;
 }) {
   return (
-    <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+    <select value={language} onChange={(e) => setLanguage(e.target.value)} className="bg-[#252525]">
       {Languages.map((lang) => (
         <option key={lang} value={lang}>
           {lang.charAt(0).toUpperCase() + lang.slice(1)}

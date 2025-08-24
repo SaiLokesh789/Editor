@@ -3,16 +3,16 @@ import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
 import { generateDockerCommand } from "@/features/codeRunner/utils/GenerateDockerCommand";
+import { randomUUID } from "crypto"; // Add this import
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { code, language, input } = body; // Accept input from the request body
+    const { code, language, input } = body;
 
-    const tempDir = path.join(process.cwd(), "temp");
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
-    }
+    // Create a unique temp directory for each request
+    const tempDir = path.join(process.cwd(), "temp", randomUUID());
+    fs.mkdirSync(tempDir, { recursive: true });
 
     let fileName = "";
     let compileCommand = "";
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     } else if (language === "python") {
       fileName = "main.py";
       dockerImage = "python-runner";
-      compileCommand = ""; // no compilation needed
+      compileCommand = "";
       runCommand = "timeout 2s python3 main.py";
     } else if (language === "c") {
       fileName = "main.c";
@@ -49,15 +49,14 @@ export async function POST(req: Request) {
     const filePath = path.join(tempDir, fileName);
     fs.writeFileSync(filePath, code);
 
-    // Write the input to a file
     const inputFilePath = path.join(tempDir, "input.txt");
-    fs.writeFileSync(inputFilePath, input || ""); // Write input to a file
+    fs.writeFileSync(inputFilePath, input || "");
 
     const dockerCommand = generateDockerCommand(
       tempDir,
       dockerImage,
       compileCommand,
-      `${runCommand} < input.txt` // Redirect input from the file
+      `${runCommand} < input.txt`
     );
 
     return new Promise((resolve) => {
@@ -81,7 +80,7 @@ export async function POST(req: Request) {
             )
           );
         }
-        // Cleanup
+        // Cleanup unique temp directory
         fs.rmSync(tempDir, { recursive: true, force: true });
       });
     });
